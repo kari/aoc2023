@@ -1,5 +1,6 @@
 """ Day 2 of AoC 2023 """
 import re
+import math
 
 DEBUG = False
 
@@ -43,7 +44,7 @@ for line in GAME_RECORD.splitlines():
     if possible:
         id_sum += int(game_id)
 
-    cube_sum += max_seen["red"] * max_seen["green"] * max_seen["blue"]
+    cube_sum += math.prod(max_seen.values())
 
 print(id_sum)
 assert id_sum == PART1
