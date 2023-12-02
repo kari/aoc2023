@@ -20,16 +20,14 @@ def part1():
 def part2():
     """Part 2"""
     value = 0
+    pattern = re.compile(rf"({"|".join(NUMBERS)})")
     for line in CALIBRATION_DOCUMENT.splitlines():
-        pattern = re.compile(r"(one|two|three|four|five|six|seven|eight|nine)")
         m = re.search(pattern, line)
         while m is not None:
             line = (
                 line[: m.start()]
-                + m[0][0]
                 + str(NUMBERS.index(m[0]) + 1)
-                + m[0][-1]
-                + line[m.end() :]
+                + line[m.end() - 1:]
             )
             m = re.search(pattern, line)
 
@@ -38,6 +36,10 @@ def part2():
 
     return value
 
+p1 = part1()
+assert p1 == 54450
+print(p1)
 
-print(part1())
-print(part2())
+p2 = part2()
+assert p2 == 54265
+print(p2)
