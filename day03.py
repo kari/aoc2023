@@ -1,5 +1,6 @@
 """ Day 3 of AoC 2023 """
 import re
+import math
 
 DEBUG = False
 
@@ -15,13 +16,14 @@ if DEBUG:
 ...$.*....
 .664.598..""".splitlines()
     PART1 = 4361
-    PART2 = None
+    PART2 = 467835
 else:
     with open("day03.txt", "r", encoding="utf8") as f:
         SCHEMATIC = f.read().splitlines()
-    PART1 = None
-    PART2 = None
+    PART1 = 550064
+    PART2 = 85010461
 
+# Part 1
 NUMBER = re.compile(r"(\d+)")
 SYMBOL = re.compile(r"[^0-9\.]")
 part_sum = 0
@@ -35,3 +37,24 @@ for idx, line in enumerate(SCHEMATIC):
                     part_sum += int(m[0])
 
 print(part_sum)
+assert part_sum == PART1
+
+# Part 2
+GEAR_SYMBOL = re.compile(r"\*")
+gears = {}
+for idx, line in enumerate(SCHEMATIC):
+    lines = (max(idx-1,0), min(idx+1, len(SCHEMATIC)-1))
+    for m in NUMBER.finditer(line):
+        span = (max(m.start()-1,0), min(m.end(), len(line)-1))
+        for l in range(lines[0], lines[1]+1):
+            for c in range(span[0], span[1]+1):
+                if GEAR_SYMBOL.match(SCHEMATIC[l][c]):
+#                    print("gear at ",l,c)
+                    if (l,c) in gears:
+                        gears[(l,c)].append(int(m[0]))
+                    else:
+                        gears[(l,c)] = [int(m[0])]
+
+gear_ratio_sum = sum([math.prod(value) for (key, value) in gears.items() if len(value) == 2])
+print(gear_ratio_sum)
+assert gear_ratio_sum == PART2
