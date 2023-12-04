@@ -1,4 +1,4 @@
-""" Day 3 of AoC 2023 """
+""" Day 4 of AoC 2023 """
 import re
 import math
 
@@ -17,7 +17,7 @@ else:
     with open("day04.txt", "r", encoding="utf8") as f:
         CARDS = f.read()
     PART1 = 25231
-    PART2 = None
+    PART2 = 9721255
 
 points = 0
 for card in CARDS.splitlines():
@@ -28,3 +28,24 @@ for card in CARDS.splitlines():
 
 print(points)
 assert points == PART1
+
+cards = {}
+
+def incr(num, val = 1):
+    global cards
+    if num in cards:
+        cards[num] += val
+    else:
+        cards[num] = val
+
+for num, card in enumerate(CARDS.splitlines()):
+    incr(num)
+    have, winning = card.split(" | ")
+    have = set(map(int, re.sub(r"Card\s+\d+:\s+", "", have).split()))
+    winning = set(map(int, winning.split()))
+    matches = len(have.intersection(winning))
+    for i in range(matches):
+        incr(num+i+1, cards[num])
+
+print(sum(cards.values()))
+assert sum(cards.values()) == PART2
