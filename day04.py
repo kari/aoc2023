@@ -19,33 +19,36 @@ else:
     PART1 = 25231
     PART2 = 9721255
 
+
+def matches(c):
+    left, right = c.split(" | ")
+    left = set(map(int, re.sub(r"Card\s+\d+:\s+", "", left).split()))
+    right = set(map(int, right.split()))
+    return len(left.intersection(right))
+
+
 points = 0
 for card in CARDS.splitlines():
-    have, winning = card.split(" | ")
-    have = set(map(int, re.sub(r"Card\s+\d+:\s+", "", have).split()))
-    winning = set(map(int, winning.split()))
-    points += math.floor(2**(len(have.intersection(winning))-1))
+    points += math.floor(2 ** (matches(card) - 1))
 
 print(points)
 assert points == PART1
 
-cards = {}
 
-def incr(num, val = 1):
-    global cards
-    if num in cards:
-        cards[num] += val
+def incr(idx, val=1):
+    # global cards
+    if idx in cards:
+        cards[idx] += val
     else:
-        cards[num] = val
+        cards[idx] = val
+
+
+cards = {}
 
 for num, card in enumerate(CARDS.splitlines()):
     incr(num)
-    have, winning = card.split(" | ")
-    have = set(map(int, re.sub(r"Card\s+\d+:\s+", "", have).split()))
-    winning = set(map(int, winning.split()))
-    matches = len(have.intersection(winning))
-    for i in range(matches):
-        incr(num+i+1, cards[num])
+    for i in range(matches(card)):
+        incr(num + i + 1, cards[num])
 
 print(sum(cards.values()))
 assert sum(cards.values()) == PART2
