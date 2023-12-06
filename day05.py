@@ -1,7 +1,7 @@
 """ Day 4 of AoC 2023 """
 import re
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     INPUT = """seeds: 79 14 55 13
@@ -38,7 +38,7 @@ humidity-to-location map:
 60 56 37
 56 93 4"""
     PART1 = 35
-    PART2 = None
+    PART2 = 46
 else:
     with open("inputs/day05.txt", "r", encoding="utf8") as f:
         INPUT = f.read()
@@ -75,7 +75,7 @@ class Map:
         return number
 
 
-seeds = map(int, re.match(r"seeds: (.+)", INPUT)[1].split())  # pyright: ignore[reportOptionalSubscript]
+seeds = list(map(int, re.match(r"seeds: (.+)", INPUT)[1].split()))  # pyright: ignore[reportOptionalSubscript]
 maps = list(map(Map, re.findall(MAP_PATTERN, INPUT)))
 
 locations: list[int] = []
@@ -87,3 +87,15 @@ for s in seeds:
 
 print(min(locations))
 assert min(locations) == PART1
+
+locations: list[int] = []
+for i in range(0, len(seeds), 2):
+    start, length = seeds[i : i + 2]
+    for s in range(start, start + length + 1):
+        idx = s
+        for m in maps:
+            idx = m.convert(idx)
+        locations.append(idx)
+
+print(min(locations))
+assert min(locations) == PART2
