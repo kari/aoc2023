@@ -18,7 +18,7 @@ if DEBUG:
     PART1 = 4361
     PART2 = 467835
 else:
-    with open("day03.txt", "r", encoding="utf8") as f:
+    with open("inputs/day03.txt", "r", encoding="utf8") as f:
         SCHEMATIC = f.read().splitlines()
     PART1 = 550064
     PART2 = 85010461

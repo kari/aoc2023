@@ -3,7 +3,7 @@ import re
 
 NUMBERS = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
-with open("day01.txt", "r", encoding="utf8") as f:
+with open("inputs/day01.txt", "r", encoding="utf8") as f:
     CALIBRATION_DOCUMENT = f.read()
 
 

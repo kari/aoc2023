@@ -13,7 +13,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"""
     PART1 = 8
     PART2 = 2286
 else:
-    with open("day02.txt", "r", encoding="utf8") as f:
+    with open("inputs/day02.txt", "r", encoding="utf8") as f:
         GAME_RECORD = f.read()
     PART1 = 2505
     PART2 = 70265

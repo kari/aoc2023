@@ -14,7 +14,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"""
     PART1 = 13
     PART2 = 30
 else:
-    with open("day04.txt", "r", encoding="utf8") as f:
+    with open("inputs/day04.txt", "r", encoding="utf8") as f:
         CARDS = f.read()
     PART1 = 25231
     PART2 = 9721255
