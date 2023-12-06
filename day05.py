@@ -1,6 +1,5 @@
 """ Day 4 of AoC 2023 """
 import re
-from typing import List
 
 DEBUG = False
 
@@ -50,10 +49,13 @@ MAP_PATTERN = re.compile(r"([^-\n]+)-to-([^-]+) map:\n((?:.+(?:\n|$))+)")
 
 
 class Map:
+    """maps describe how to convert numbers from a source category
+    into numbers in a destination category"""
+
     def __init__(self, data):
         self.source: str = data[0]
         self.dest: str = data[1]
-        self.ranges: List[List[int]] = list(
+        self.ranges: list[list[int]] = list(
             map(lambda x: [int(y) for y in x.split()], data[2].splitlines())
         )
 
@@ -64,6 +66,7 @@ class Map:
         return f"Map('{self.source}','{self.dest}',...)"
 
     def convert(self, number: int):
+        """converts a source number to a destination number"""
         for r in self.ranges:
             dest, source, length = r
             if number in range(source, source + length + 1):
@@ -75,7 +78,7 @@ class Map:
 seeds = map(int, re.match(r"seeds: (.+)", INPUT)[1].split())  # pyright: ignore[reportOptionalSubscript]
 maps = list(map(Map, re.findall(MAP_PATTERN, INPUT)))
 
-locations = []
+locations: list[int] = []
 for s in seeds:
     idx = s
     for m in maps:
