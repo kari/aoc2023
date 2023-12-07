@@ -26,6 +26,7 @@ class Hand:
         self.hand = list(hand)
         self.bid = int(bid)
 
+    @property
     def strength(self):
         counts = sorted(Counter(self.hand).values(), reverse=True)
         if counts[0] == 5:  # five of a kind
@@ -42,9 +43,10 @@ class Hand:
             return 6
         else:  # high card
             return 7
-
+    
+    @property
     def name(self):
-        strength = self.strength()
+        strength = self.strength
         if strength == 1:
             return "Five of a kind"
         elif strength == 2:
@@ -66,17 +68,18 @@ class Hand:
     def __repr__(self):
         return f'Hand(\'{"".join(self.hand)}\', {self.bid})'
 
-    def sortorder(self):
+    @property
+    def sort_order(self):
         cmp = "".join(
             list(map(lambda x: self.HEXSTRING[self.ORDER.index(x)], self.hand))
         )
-        return str(self.strength()) + cmp
+        return str(self.strength) + cmp
 
 
 hands = [Hand(*row.split()) for row in INPUT]
 winnings = 0
 for rank, hand in enumerate(
-    sorted(hands, key=lambda hand: hand.sortorder(), reverse=True)
+    sorted(hands, key=lambda hand: hand.sort_order, reverse=True)
 ):
     winnings += hand.bid * (rank + 1)
 
@@ -87,6 +90,7 @@ assert winnings == PART1
 class JokerHand(Hand):
     ORDER = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]  # fmt: skip
 
+    @property
     def strength(self):
         counts = Counter(self.hand)
         if "J" in counts:
@@ -119,7 +123,7 @@ class JokerHand(Hand):
 hands = [JokerHand(*row.split()) for row in INPUT]
 winnings = 0
 for rank, hand in enumerate(
-    sorted(hands, key=lambda hand: hand.sortorder(), reverse=True)
+    sorted(hands, key=lambda hand: hand.sort_order, reverse=True)
 ):
     winnings += hand.bid * (rank + 1)
 
