@@ -17,29 +17,30 @@ else:
     PART1 = 253603890
     PART2 = 253630098
 
-class Hand:
-    ORDER = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
-    HEXSTRING = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
 
-    def __init__(self, hand: str, bid: int):
+class Hand:
+    ORDER = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]  # fmt: skip
+    HEXSTRING = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]  # fmt: skip
+
+    def __init__(self, hand: str, bid: str):
         self.hand = list(hand)
-        self.bid = bid
+        self.bid = int(bid)
 
     def strength(self):
         counts = sorted(Counter(self.hand).values(), reverse=True)
-        if counts[0] == 5: # five of a kind
+        if counts[0] == 5:  # five of a kind
             return 1
-        elif counts[0] == 4: # four of a kind
+        elif counts[0] == 4:  # four of a kind
             return 2
-        elif counts[0] == 3 and counts[1] == 2: # full house
+        elif counts[0] == 3 and counts[1] == 2:  # full house
             return 3
-        elif counts[0] == 3: # three of a kind
+        elif counts[0] == 3:  # three of a kind
             return 4
-        elif counts[0] == 2 and counts[1] == 2: # two pair
+        elif counts[0] == 2 and counts[1] == 2:  # two pair
             return 5
-        elif counts[0] == 2: # one pair
+        elif counts[0] == 2:  # one pair
             return 6
-        else: # high card
+        else:  # high card
             return 7
 
     def name(self):
@@ -64,65 +65,63 @@ class Hand:
 
     def __repr__(self):
         return f'Hand(\'{"".join(self.hand)}\', {self.bid})'
-    
+
     def sortorder(self):
-        cmp = "".join(list(map(lambda x: self.HEXSTRING[self.ORDER.index(x)], self.hand)))
-        return str(self.strength())+cmp
-
-hands = []
-for row in INPUT:
-    hand, bid = row.split()
-    hand = Hand(hand, int(bid))
-    hands.append(hand)
+        cmp = "".join(
+            list(map(lambda x: self.HEXSTRING[self.ORDER.index(x)], self.hand))
+        )
+        return str(self.strength()) + cmp
 
 
-ranking = sorted(hands, key = lambda hand: hand.sortorder(), reverse=True)
+hands = [Hand(*row.split()) for row in INPUT]
 winnings = 0
-for rank, hand in enumerate(ranking):
-    winnings += hand.bid * (rank+1)
+for rank, hand in enumerate(
+    sorted(hands, key=lambda hand: hand.sortorder(), reverse=True)
+):
+    winnings += hand.bid * (rank + 1)
 
 print(winnings)
 assert winnings == PART1
 
+
 class JokerHand(Hand):
-    ORDER = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]
+    ORDER = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"]  # fmt: skip
 
     def strength(self):
         counts = Counter(self.hand)
         if "J" in counts:
             jokers = counts["J"]
             if jokers == 5:
-                return 1 # five of a kind
+                return 1  # five of a kind
         else:
             jokers = 0
-        sortedCounts = sorted(Counter(list(filter(lambda x: x != "J", self.hand))).values(), reverse=True)
-        if sortedCounts[0] + jokers == 5: # five of a kind
+        sortedCounts = sorted(
+            Counter(list(filter(lambda x: x != "J", self.hand))).values(), reverse=True
+        )
+        if sortedCounts[0] + jokers == 5:  # five of a kind
             return 1
-        elif sortedCounts[0] + jokers == 4: # four of a kind
+        elif sortedCounts[0] + jokers == 4:  # four of a kind
             return 2
-        elif sortedCounts[0] + jokers == 3 and sortedCounts[1] == 2: # full house
+        elif sortedCounts[0] + jokers == 3 and sortedCounts[1] == 2:  # full house
             return 3
-        elif sortedCounts[0] == 3 and sortedCounts[1] + jokers == 2: # full house
+        elif sortedCounts[0] == 3 and sortedCounts[1] + jokers == 2:  # full house
             return 3
-        elif sortedCounts[0] + jokers == 3: # three of a kind
+        elif sortedCounts[0] + jokers == 3:  # three of a kind
             return 4
-        elif sortedCounts[0] == 2 and sortedCounts[1] + jokers == 2: # two pair
+        elif sortedCounts[0] == 2 and sortedCounts[1] + jokers == 2:  # two pair
             return 5
-        elif sortedCounts[0] + jokers == 2: # one pair
+        elif sortedCounts[0] + jokers == 2:  # one pair
             return 6
-        else: # high card
+        else:  # high card
             return 7
 
-hands = []
-for row in INPUT:
-    hand, bid = row.split()
-    hand = JokerHand(hand, int(bid))
-    hands.append(hand)
 
-ranking = sorted(hands, key = lambda hand: hand.sortorder(), reverse=True)
+hands = [JokerHand(*row.split()) for row in INPUT]
 winnings = 0
-for rank, hand in enumerate(ranking):
-    winnings += hand.bid * (rank+1)
+for rank, hand in enumerate(
+    sorted(hands, key=lambda hand: hand.sortorder(), reverse=True)
+):
+    winnings += hand.bid * (rank + 1)
 
 print(winnings)
 assert winnings == PART2
