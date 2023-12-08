@@ -29,15 +29,16 @@ class Node:
         self.right = right
 
     def __repr__(self):
-        return f"Node('{self.name}','{self.left.name}','{self.right.name}')"
-
+        return f"Node('{self.name}','{self.left.name if self.left is not None else "None"}','{self.right.name if self.right is not None else "None"}')"
 
 NODE_PATTERN = re.compile(r"(\w{3}) = \((\w{3}), (\w{3})\)")
 NETWORK: dict[str, Node] = {}
 
 def build_network():
     for row in INPUT[2:]:
-        node, left, right = NODE_PATTERN.match(row).groups()
+        m = NODE_PATTERN.match(row)
+        assert m
+        node, left, right = m.groups()
         # print(node, left, right)
         if left not in NETWORK:
             NETWORK[left] = Node(left)
@@ -54,6 +55,7 @@ def build_network():
 
 def part1():
     node = NETWORK["AAA"]
+    assert node
     steps = 0
     for i in cycle(INSTRUCTIONS): # FIXME: can be infinite loop
         steps += 1
@@ -61,14 +63,17 @@ def part1():
             node = node.left
         else:
             node = node.right
+        assert node
         if node.name == "ZZZ":
             # print(steps)
             break
 
     return steps
 
+def main():
+    build_network()
+    steps = part1()
+    print(steps)
+    assert steps == PART1
 
-build_network()
-steps = part1()
-print(steps)
-assert steps == PART1
+main()
