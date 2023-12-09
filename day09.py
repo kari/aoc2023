@@ -13,7 +13,7 @@ else:
     with open("inputs/day09.txt", "r", encoding="utf8") as f:
         INPUT = f.read().splitlines()
     PART1 = 2038472161
-    PART2 = None
+    PART2 = 1091
 
 history = list(map(lambda x: list(map(int, x.split())), INPUT))
 next_values = []
@@ -23,10 +23,23 @@ for h in history:
     while any([x != 0 for x in diff]):
         diff = np.diff(diff)
         last_digits.append(diff[-1])
-#    print(list(reversed(last_digits)))
-#    print(np.cumsum(list(reversed(last_digits))))
     next_values.append(np.cumsum(list(reversed(last_digits)))[-1])
 
 print(sum(next_values))
 assert sum(next_values) == PART1
 
+prev_values = []
+for h in history:
+    first_digits = [h[0]]
+    diff = h.copy()
+    while any([x != 0 for x in diff]):
+        diff = np.diff(diff)
+        first_digits.append(diff[0])
+    first_digits = list(reversed(first_digits))
+    xtr = [0]
+    for i in range(1, len(first_digits)):
+        xtr.append(first_digits[i] - xtr[i - 1])
+    prev_values.append(xtr[-1])
+
+print(sum(prev_values))
+assert sum(prev_values) == PART2
